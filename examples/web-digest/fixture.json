@@ -1,0 +1,11 @@
+{
+  "mode": "fixture",
+  "source": "https://github.com/HackerNews/API",
+  "fetchedAt": "2000-01-01T00:00:00.000Z",
+  "ids": [1, 2, 3],
+  "items": [
+    { "id": 1, "type": "story", "title": "Synthetic fixture: dependency graphs", "score": 30, "url": "https://example.com/graphs" },
+    { "id": 2, "type": "story", "title": "Synthetic fixture: resumable artifacts", "score": 20, "url": "https://example.org/artifacts" },
+    { "id": 3, "type": "story", "title": "Synthetic fixture: shared sources", "score": 20 }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Make Next Graph 运行架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1240,
+      760
+    ],
+    "views": [
+      {
+        "id": "observe",
+        "label": "只读计算",
+        "focus": [
+          "definition",
+          "planner",
+          "advice",
+          "artifacts"
+        ],
+        "note": "选定目标，观察真实文件，推导当前缺口。"
+      },
+      {
+        "id": "execute",
+        "label": "执行与判断",
+        "focus": [
+          "host",
+          "executor",
+          "artifacts",
+          "advice"
+        ],
+        "note": "宿主选择有用工作、协调并行、判断业务是否达标。"
+      },
+      {
+        "id": "reuse",
+        "label": "复用与接续",
+        "focus": [
+          "templates",
+          "definition",
+          "artifacts",
+          "host"
+        ],
+        "note": "行业片段扩展定义；新 agent 从同一批持久文件继续。"
+      }
+    ],
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "宿主"
+        },
+        "backend": {
+          "label": "计算层"
+        },
+        "database": {
+          "label": "文件存储"
+        },
+        "external": {
+          "label": "定义与工具"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "definition",
+      "type": "external",
+      "label": "目标与图定义",
+      "sublabel": "goal.md · graph.json",
+      "pos": [
+        80,
+        115
+      ],
+      "size": [
+        230,
+        84
+      ]
+    },
+    {
+      "id": "planner",
+      "type": "backend",
+      "label": "只读计算器",
+      "sublabel": "加载校验 · 文件观察 · 依赖求值",
+      "pos": [
+        480,
+        115
+      ],
+      "size": [
+        260,
+        84
+      ]
+    },
+    {
+      "id": "advice",
+      "type": "backend",
+      "label": "本次观察与建议",
+      "sublabel": "ready · attention · waiting",
+      "pos": [
+        910,
+        115
+      ],
+      "size": [
+        250,
+        84
+      ]
+    },
+    {
+      "id": "host",
+      "type": "frontend",
+      "label": "宿主 agent",
+      "sublabel": "读目标 · 选工作 · 内容验收",
+      "pos": [
+        910,
+        330
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "executor",
+      "type": "external",
+      "label": "原生工具与 agent",
+      "sublabel": "采集 · 编写 · 测试 · 显式采集日志",
+      "pos": [
+        910,
+        555
+      ],
+      "size": [
+        250,
+        84
+      ]
+    },
+    {
+      "id": "artifacts",
+      "type": "database",
+      "label": "磁盘真实产物",
+      "sublabel": "规格 · 源码 · 报告 · 检查原文",
+      "pos": [
+        480,
+        555
+      ],
+      "size": [
+        260,
+        84
+      ]
+    },
+    {
+      "id": "templates",
+      "type": "external",
+      "label": "模板与行业片段",
+      "sublabel": "复用节点 · 依赖 · 验收要求",
+      "pos": [
+        80,
+        555
+      ],
+      "size": [
+        230,
+        84
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "definition-read",
+      "from": "definition",
+      "to": "planner",
+      "label": "图与目标引用"
+    },
+    {
+      "id": "derive-advice",
+      "from": "planner",
+      "to": "advice",
+      "label": "只在内存中计算",
+      "variant": "emphasis"
+    },
+    {
+      "id": "advice-to-host",
+      "from": "advice",
+      "to": "host",
+      "label": "建议与证据缺口",
+      "labelAt": [
+        1035,
+        262
+      ]
+    },
+    {
+      "id": "host-execute",
+      "from": "host",
+      "to": "executor",
+      "label": "选择并执行",
+      "variant": "emphasis",
+      "labelAt": [
+        1035,
+        486
+      ]
+    },
+    {
+      "id": "produce-files",
+      "from": "executor",
+      "to": "artifacts",
+      "label": "落盘真实结果"
+    },
+    {
+      "id": "read-artifacts",
+      "from": "artifacts",
+      "to": "planner",
+      "label": "每次重新观察"
+    },
+    {
+      "id": "host-query",
+      "from": "host",
+      "to": "planner",
+      "label": "调用 next",
+      "variant": "dashed"
+    },
+    {
+      "id": "reuse-template",
+      "from": "templates",
+      "to": "definition",
+      "label": "实例化并调整"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "产物驱动",
+      "items": [
+        "节点对应可检查的真实成果",
+        "图只保存定义，观察结果每次现算"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "职责清楚",
+      "items": [
+        "计算器提供依赖建议",
+        "宿主管执行、权限、并行和验收"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "可以接续",
+      "items": [
+        "重读目标与已有文件",
+        "复用仍有效的成果，再补实际缺口"
+      ]
+    }
+  ]
+}

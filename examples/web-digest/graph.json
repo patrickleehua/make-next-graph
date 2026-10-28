@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "name": "Public web digest",
+  "description": "A resumable artifact graph using the official Hacker News API. The demo makes no claims about article bodies.",
+  "goals": ["delivery"],
+  "nodes": [
+    {
+      "id": "goal", "title": "Digest brief", "kind": "input", "files": ["goal.md"],
+      "acceptance": "The brief defines the public metadata-only digest, item limit, source provenance and verification limits."
+    },
+    {
+      "id": "snapshot", "title": "Public API snapshot", "kind": "artifact",
+      "requires": ["goal"], "files": ["sources/snapshot.json"],
+      "acceptance": "Retain the source URL, retrieval time, selected IDs, returned item metadata and live/fixture mode.",
+      "recipe": { "instructions": "Fetch topstories and selected story metadata from the official public API. Use bounded timeouts and retain a stable snapshot.", "role": "collector", "writes": ["sources/snapshot.json"] }
+    },
+    {
+      "id": "ranking", "title": "Score-based selection", "kind": "artifact",
+      "requires": ["snapshot"], "files": ["analysis/ranking.json"],
+      "acceptance": "The ranking uses the snapshot's scores with a deterministic ID tie-breaker.",
+      "recipe": { "instructions": "Rank the saved story metadata; do not refetch it.", "role": "analyst", "writes": ["analysis/ranking.json"] }
+    },
+    {
+      "id": "coverage", "title": "Source coverage", "kind": "artifact",
+      "requires": ["snapshot"], "files": ["analysis/coverage.json"],
+      "acceptance": "Count source hosts and returned stories from the same snapshot. Do not probe live URL availability.",
+      "recipe": { "instructions": "Calculate source coverage independently from ranking.", "role": "analyst", "writes": ["analysis/coverage.json"] }
+    },
+    {
+      "id": "digest", "title": "Linked digest", "kind": "artifact",
+      "requires": ["goal", "ranking", "coverage"], "files": ["digest.md"],
+      "acceptance": "Every included item links to its original URL and discussion; describe only the metadata actually retrieved.",
+      "recipe": { "instructions": "Combine ranking and coverage into a concise Markdown digest with source and retrieval details.", "role": "editor", "writes": ["digest.md"] }
+    },
+    {
+      "id": "verification", "title": "Digest contract checks", "kind": "check",
+      "requires": ["digest", "snapshot"], "files": ["checks/verify.json"],
+      "check": { "path": "checks/verify.json" },
+      "acceptance": "The real verification command succeeds: displayed titles/scores, ordered IDs, item links, provenance and coverage match the snapshot. Link presence is not a live link or factual article audit.",
+      "recipe": { "instructions": "Run verify.mjs against the artifacts and retain actual exit code, stdout and stderr.", "role": "verifier", "writes": ["checks/verify.json"] }
+    },
+    {
+      "id": "delivery", "title": "Usable result", "kind": "artifact",
+      "requires": ["digest", "verification"], "files": ["delivery.md"],
+      "acceptance": "Link the digest, source snapshot and real verification output, and state the verification limits.",
+      "recipe": { "instructions": "Deliver links to the actual artifacts and read the result against goal.md.", "role": "owner", "writes": ["delivery.md"] }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "name": "Evidence-based research",
+  "description": "Standalone make usage: no development method is required.",
+  "includes": ["fragments/goal.json", "fragments/research.json"],
+  "goals": ["research.delivery"],
+  "nodes": [{
+    "id": "research.delivery", "title": "Usable research report", "kind": "artifact",
+    "requires": ["goal", "research.findings"], "files": ["report.md"],
+    "acceptance": "Answer the original question, link supporting evidence, show limitations and specify a practical next action.",
+    "recipe": { "instructions": "Write and read back a concise report against goal.md and the findings.", "role": "editor", "writes": ["report.md"] }
+  }]
+}

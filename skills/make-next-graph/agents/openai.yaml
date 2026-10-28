@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Next Graph"
+  short_description: "Plan and resume tasks from real artifact dependencies"
+  default_prompt: "Use $make-next-graph to build a minimal artifact graph for this goal and identify the next useful work."

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Research + content industry pack",
+  "includes": ["fragments/goal.json", "fragments/research.json", "fragments/content.json"],
+  "goals": ["content.delivery"],
+  "nodes": []
+}

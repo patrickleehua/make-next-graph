@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Make Next Graph v1",
+  "oneOf": [ { "$ref": "#/$defs/graph" }, { "$ref": "#/$defs/fragment" } ],
+  "$defs": {
+    "strings": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "paths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "recipe": {
+      "type": "object", "additionalProperties": false, "required": ["instructions"],
+      "properties": {
+        "instructions": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "writes": { "$ref": "#/$defs/paths" }
+      }
+    },
+    "node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "kind", "files", "acceptance"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9._-]*$" },
+        "title": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["input", "artifact", "check"] },
+        "files": { "$ref": "#/$defs/paths" },
+        "requires": { "$ref": "#/$defs/strings" },
+        "acceptance": { "type": "string", "minLength": 1 },
+        "recipe": { "$ref": "#/$defs/recipe" },
+        "check": {
+          "type": "object", "additionalProperties": false, "required": ["path"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "expectExitCode": { "type": "integer", "minimum": 0, "maximum": 255 }
+          }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "input" } } },
+          "then": { "not": { "anyOf": [ { "required": ["recipe"] }, { "required": ["check"] } ] } },
+          "else": { "required": ["recipe"] } },
+        { "if": { "properties": { "kind": { "const": "check" } } },
+          "then": { "required": ["check"] },
+          "else": { "not": { "required": ["check"] } } }
+      ]
+    },
+    "graph": {
+      "type": "object", "additionalProperties": false,
+      "required": ["version", "name", "goals", "nodes"],
+      "properties": {
+        "version": { "const": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "changeReason": { "type": "string", "minLength": 1 },
+        "goals": { "allOf": [ { "$ref": "#/$defs/strings" }, { "minItems": 1 } ] },
+        "includes": { "$ref": "#/$defs/strings" },
+        "nodes": { "type": "array", "maxItems": 1000, "items": { "$ref": "#/$defs/node" } }
+      }
+    },
+    "fragment": {
+      "type": "object", "additionalProperties": false, "required": ["version", "nodes"],
+      "properties": {
+        "version": { "const": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "includes": { "$ref": "#/$defs/strings" },
+        "nodes": { "type": "array", "maxItems": 1000, "items": { "$ref": "#/$defs/node" } }
+      }
+    }
+  }
+}

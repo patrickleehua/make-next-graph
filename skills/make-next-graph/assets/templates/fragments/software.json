@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "description": "Optional SDD and TDD composition; adapt paths to the project's native tools.",
+  "nodes": [
+    {
+      "id": "software.spec", "title": "Behavior specification", "kind": "artifact",
+      "requires": ["goal"], "files": ["spec.md"],
+      "acceptance": "Observable behavior, failure cases and exclusions agree with goal.md. If an SDD tool is selected, point this node to its original files.",
+      "recipe": { "instructions": "Use the project's selected specification method, or a minimal plain-language specification when no tool is selected.", "role": "designer", "writes": ["spec.md"] }
+    },
+    {
+      "id": "software.tests", "title": "Executable behavior tests", "kind": "artifact",
+      "requires": ["software.spec"], "files": ["tests/acceptance.test.mjs"],
+      "acceptance": "Tests observe the requested behavior and meaningful failures without mirroring implementation.",
+      "recipe": { "instructions": "Write focused acceptance tests in the project's native test framework; adjust this template's default Node paths if needed.", "role": "developer", "writes": ["tests/acceptance.test.mjs"] }
+    },
+    {
+      "id": "software.red", "title": "Expected initial failure", "kind": "check",
+      "requires": ["software.tests"], "files": ["checks/red.json"],
+      "check": { "path": "checks/red.json", "expectExitCode": 1 },
+      "acceptance": "Inspect the raw output: failure must come from the absent behavior, not a syntax, import or environment error. Exit code 1 alone cannot prove a valid red step.",
+      "recipe": { "instructions": "Run the tests before implementation and retain their real exit code, stdout and stderr. Diagnose the failing assertion.", "role": "developer", "writes": ["checks/red.json"] }
+    },
+    {
+      "id": "software.implementation", "title": "Implemented behavior", "kind": "artifact",
+      "requires": ["software.spec", "software.red"], "files": ["src/feature.mjs"],
+      "acceptance": "The implementation satisfies the specification while preserving the existing behavior that the task did not change.",
+      "recipe": { "instructions": "Implement the specified behavior using the existing project's structure.", "role": "developer", "writes": ["src/feature.mjs"] }
+    },
+    {
+      "id": "software.green", "title": "Behavior verification", "kind": "check",
+      "requires": ["software.implementation", "software.tests"], "files": ["checks/green.json"],
+      "check": { "path": "checks/green.json" },
+      "acceptance": "The relevant tests actually ran and passed. Inspect skipped tests and unresolved environmental gaps.",
+      "recipe": { "instructions": "Run the focused tests and retain raw stdout, stderr and exit code. Investigate failures before choosing the next repair.", "role": "verifier", "writes": ["checks/green.json"] }
+    },
+    {
+      "id": "software.delivery", "title": "Delivery and limitations", "kind": "artifact",
+      "requires": ["goal", "software.green"], "files": ["delivery.md"],
+      "acceptance": "Explain the resulting behavior, usable entrypoint, relevant test evidence and any remaining limitations against the goal.",
+      "recipe": { "instructions": "Read the actual implementation and test output, then deliver the result in the project's usual form.", "role": "owner", "writes": ["delivery.md"] }
+    }
+  ]
+}

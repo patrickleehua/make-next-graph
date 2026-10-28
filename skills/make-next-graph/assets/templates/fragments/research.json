@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "research.sources", "title": "Source collection", "kind": "artifact",
+      "requires": ["goal"], "files": ["research/sources.md"],
+      "acceptance": "Record primary URLs, retrieval dates, relevant facts and gaps. Distinguish source claims from independently verified facts.",
+      "recipe": { "instructions": "Collect the public or authorized sources needed for the goal; retain traceable references.", "role": "researcher", "writes": ["research/sources.md"] }
+    },
+    {
+      "id": "research.findings", "title": "Evidence and comparison", "kind": "artifact",
+      "requires": ["research.sources"], "files": ["research/findings.md"],
+      "acceptance": "Each material finding cites its source; assumptions, conflicting evidence and limitations remain visible.",
+      "recipe": { "instructions": "Compare the sources against the goal and verify the conclusions that affect the decision.", "role": "analyst", "writes": ["research/findings.md"] }
+    }
+  ]
+}

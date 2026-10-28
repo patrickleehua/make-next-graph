@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "description": "Example content-industry extension, reusing research prerequisites.",
+  "nodes": [
+    {
+      "id": "content.audience", "title": "Audience and channel brief", "kind": "artifact",
+      "requires": ["goal"], "files": ["content/audience.md"],
+      "acceptance": "Define the audience, intended action, channel constraints and tone from the actual business goal.",
+      "recipe": { "instructions": "Describe the intended reader and the constraints of the delivery channel.", "role": "content-strategist", "writes": ["content/audience.md"] }
+    },
+    {
+      "id": "content.draft", "title": "Sourced content draft", "kind": "artifact",
+      "requires": ["research.findings", "content.audience"], "files": ["content/draft.md"],
+      "acceptance": "Claims remain traceable and the draft suits the audience and channel.",
+      "recipe": { "instructions": "Write a source-backed draft using the research findings and audience brief.", "role": "writer", "writes": ["content/draft.md"] }
+    },
+    {
+      "id": "content.review", "title": "Editorial findings and handling", "kind": "artifact",
+      "requires": ["content.draft"], "files": ["content/review.md"],
+      "acceptance": "Record concrete factual or editorial issues and how they were handled; do not infer approval from file existence.",
+      "recipe": { "instructions": "Read the draft, verify consequential claims and resolve relevant review findings.", "role": "editor", "writes": ["content/review.md"] }
+    },
+    {
+      "id": "content.delivery", "title": "Final content", "kind": "artifact",
+      "requires": ["content.draft", "content.review"], "files": ["content/final.md"],
+      "acceptance": "The content meets goal.md and resolves or discloses review findings. External publication requires its own authorization.",
+      "recipe": { "instructions": "Produce the final content and explain any remaining limits to the owner.", "role": "owner", "writes": ["content/final.md"] }
+    }
+  ]
+}

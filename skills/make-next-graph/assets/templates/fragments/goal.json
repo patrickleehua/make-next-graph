@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "nodes": [{
+    "id": "goal", "title": "Goal and acceptance", "kind": "input",
+    "files": ["goal.md"],
+    "acceptance": "State the requested deliverable, observable success criteria, constraints and exclusions in the user's terms."
+  }]
+}

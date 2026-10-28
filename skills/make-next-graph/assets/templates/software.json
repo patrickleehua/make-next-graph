@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "name": "Goal + SDD + TDD + make",
+  "description": "Optional method composition. Remove or adapt inapplicable nodes to match the actual task.",
+  "includes": ["fragments/goal.json", "fragments/software.json"],
+  "goals": ["software.delivery"],
+  "nodes": []
+}

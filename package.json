@@ -1,0 +1,16 @@
+{
+  "name": "make-next-graph",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Artifact-first, stateless next-step planning for agents and people.",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate-examples.mjs",
+    "demo": "node examples/web-digest/run.mjs",
+    "next": "node skills/make-next-graph/scripts/make.mjs next",
+    "graph": "node skills/make-next-graph/scripts/make.mjs mermaid"
+  }
+}
