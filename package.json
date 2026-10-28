@@ -4,6 +4,18 @@
   "private": true,
   "description": "Artifact-first, stateless next-step planning for agents and people.",
   "license": "MIT",
+  "author": {
+    "name": "patrickleehua",
+    "url": "https://github.com/patrickleehua"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickleehua/make-next-graph.git"
+  },
+  "homepage": "https://github.com/patrickleehua/make-next-graph#readme",
+  "bugs": {
+    "url": "https://github.com/patrickleehua/make-next-graph/issues"
+  },
   "type": "module",
   "engines": { "node": ">=22" },
   "scripts": {

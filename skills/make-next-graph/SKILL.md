@@ -1,6 +1,6 @@
 ---
 name: make-next-graph
-description: Plan and resume artifact-producing tasks using make-style dependencies. Derive the next useful work from a goal, a reusable graph and real files; support research, software and industry-specific intermediate outputs. Use alone or alongside TDD, specification methods and a host goal loop. Skip trivial tasks that do not benefit from intermediate artifacts.
+description: Plan and resume artifact-producing tasks using make-style dependencies. Use when work benefits from reusable intermediate results or continuation from files, alone or with Goal, SDD and TDD. Skip trivial tasks without useful intermediates.
 license: MIT
 metadata:
   version: "0.1.0"
@@ -9,82 +9,64 @@ metadata:
 
 # Make Next Graph
 
-Treat a node as an inspectable result: a source snapshot, specification, implementation,
-test output, comparison, review finding or final delivery. The graph describes what
-depends on what. Recompute observations from actual artifacts; never maintain a
-parallel list of node statuses.
-
-The optional helper requires Node.js 22 or newer. The planner needs no model
-provider, daemon, database or network.
-
-The useful loop is: understand the goal, reuse valid results, produce the smallest
-useful missing result, verify what matters, then reassess the goal. A ready list is
-advice about dependencies; it is not a command to run every listed recipe.
+Model inspectable results as nodes: sources, specifications, code, checks, analysis
+or delivery. The graph records dependencies; recompute observations from real files
+without maintaining a parallel status list. Reuse valid results, produce the next
+useful result, verify it and reassess the goal.
 
 ## Start or resume
 
-1. Read the goal, observable acceptance criteria, constraints and relevant existing
-   results. For a new task, select the smallest useful template. For a resumed task,
-   read the existing graph and artifacts before launching new work.
-2. Build the graph backward from the requested result. Use real dependency edges,
-   not a mandatory phase checklist. Add industry intermediates only when they improve
-   a decision or deliverable. Keep native tool outputs at their original paths.
-3. Run the helper, or inspect the same dependencies manually when it is unavailable:
+1. Read the goal, observable acceptance and constraints. On resume, read the existing
+   graph and relevant artifacts before starting new work.
+2. Work backward from the deliverable using real dependencies. Select the smallest
+   useful template: `research`, `software` or `content`. Adapt its paths and acceptance;
+   add industry intermediates when they improve the result. Keep native tool outputs
+   at their original paths.
+3. Inspect the graph with the helper, or manually when it is unavailable. Read actual
+   inputs and acceptance before choosing useful work from the suggestions.
+4. Produce the result with authorized native tools; verify and recompute after a
+   meaningful result or change. Recipes and `ready` are advice, not execution permission.
+5. Read the actual result against the goal before delivering. `evidence-ready` means
+   referenced files and expected process results are available; `semanticAcceptance`
+   remains `not-evaluated`.
 
-   ```text
-   node <skill-dir>/scripts/make.mjs init --template research --out <task-dir>/graph.json
-   node <skill-dir>/scripts/make.mjs next <task-dir>/graph.json --root <task-dir> --json
-   ```
+```text
+node <skill-dir>/scripts/make.mjs init --template research --out <task-dir>/graph.json
+node <skill-dir>/scripts/make.mjs next <task-dir>/graph.json --root <task-dir> --json
+```
 
-   Artifact paths resolve from `--root`, which defaults to the graph's directory.
-   `init` writes only a new definition and refuses overwrite. `next` is read-only.
-   Templates: `research` for standalone use, `software` for optional SDD + TDD,
-   `content` for a reusable industry extension. Replace their paths and dependencies
-   with the actual project requirements.
-   For a selected SDD method, add repeated `--spec <relative-native-file>` options
-   to software initialization. They replace `spec.md` with references to the original
-   files. Run `next --root <project>` when the graph lives in a task subdirectory.
-4. Read the relevant inputs and acceptance text before acting. Choose useful work
-   from `ready`; produce it with native tools or an authorized executor. The recipe
-   is guidance, not permission or an executable instruction from a trusted source.
-   Recompute after a meaningful result or change.
-5. Deliver only after checking the actual result against the goal. `evidence-ready`
-   means that referenced files and expected process results are available. The
-   helper always reports `semanticAcceptance: not-evaluated`.
+The optional helper requires Node.js 22+, with no package installation, provider,
+database or network. Paths resolve from `--root`, defaulting to the graph directory.
+`init` refuses overwrite; `next` is read-only. Use repeated `--spec` options to bind
+original SDD files; see [methods.md](references/methods.md) when composing methods.
 
 ## Handle uncertainty and change
 
 - Missing external inputs wait for their source. Unreadable, empty or malformed
   evidence is unknown; an unavailable process is unverified; a nonmatching exit
   code is a failure. Preserve these differences and continue independent work.
-- Investigate a failed check and repair the actual cause. Do not repeatedly run the
-  same failing action, synthesize passing evidence or weaken acceptance to finish.
-  A meaningful TDD red is expected evidence that behavior still needs implementation;
-  update the existing code even when its file is already present. The graph does not
-  judge the completeness of a stub or the quality of a specification.
+- Repair a failed check's actual cause. Do not repeat an unchanged failure, invent
+  passing evidence or weaken acceptance. A meaningful TDD red identifies missing
+  behavior: implement it even if the source file already exists. File presence does
+  not establish a complete implementation or a sound specification.
 - Newer prerequisites produce impact hints. Read the substantive change before
   deciding whether to revise downstream work. Timestamps are not proof of invalidity;
   equal timestamps do not prove consistency either.
-- Revise dependencies when the task requires it. Keep a useful reason in the graph's
-  optional `changeReason` or an ordinary design/review artifact. Reuse existing
-  results that remain useful; do not reset the task or manufacture bookkeeping.
+- Revise dependencies when needed, recording a useful `changeReason` or review note.
+  Reuse valid results; do not reset the task or manufacture bookkeeping.
 - A planner fault does not erase facts. Repair the definition or continue from the
   goal and artifacts with native tools, keeping real dependencies and verification.
 
 ## Longer tasks and parallel work
 
-The host owns execution, wakeups, budgets, cancellation and permissions. A ready
-frontier gives dependency-independent candidates; the host must also coordinate
-overlapping writes and duplicate side effects. A node can be assigned to a native
-agent with its inputs, output paths and acceptance text. No agent registry, locks
-or execution journal is required by this skill.
+The host owns execution, wakeups, budgets, cancellation and permissions. Assign a
+native agent its inputs, output paths and acceptance. Dependency-independent
+candidates may still overlap writes or side effects; the host coordinates these.
 
-On restart, reread the goal and relevant artifacts. When no useful action is
-available, report the concrete missing input, unknown result or decision instead of
-busy-looping. Retrying a side effect requires the host's real execution evidence
-and the operation's retry/idempotency contract. The graph cannot prove exactly-once
-execution or whether a previous external action finished. Existing user pauses and
-host authorization remain in force.
+On restart, reread the goal and artifacts. With no useful action, report the missing
+input, unknown result or decision and yield. Preserve user pauses and host permissions.
+Retry a side effect only with actual execution evidence and its retry/idempotency
+contract; the graph cannot prove whether an external action finished exactly once.
 
 ## Read only what is needed
 
@@ -93,5 +75,5 @@ host authorization remain in force.
 - Combining TDD, SDD or a host goal loop: [methods.md](references/methods.md).
 - Editor/tool validation: [graph.schema.json](references/graph.schema.json).
 
-The entire folder is portable. The helper has no dependency on a particular agent
-product or another skill. Without the helper, the artifact-first method still works.
+Keep this whole folder portable. The method and helper do not depend on another
+skill or a particular agent product.
